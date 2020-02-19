@@ -442,6 +442,170 @@ DROP FUNCTION myf2;
  #调用函数
 SELECT myf2('kochhar')$
 ```
+##if函数
+>功能：实现分支流
+语法：
+if(表达式1,表达式2,表达式3)
+执行顺序：
+执行表达式1，成立返回表达式2的值，不成立则返回表达式3的值
+应用：任何地方
+```
+案例1：
+if(num>10,'true','false')
+
+案例2：
+create FUNCTION test_if(age int) returns CHAR(16)
+begin
+IF age>60 AND age<=90 THEN RETURN '老奶奶';
+ELSEIF age>30 AND age<=60 THEN RETURN '大姐姐';
+ELSEIF age>18 AND age<=30 THEN RETURN '小姐姐';
+ELSEIF age>12 AND age<=18 THEN RETURN '女孩子';
+ELSEIF age>0 AND age<=12 THEN RETURN '小女生';
+END IF;
+
+END
+
+drop FUNCTION test_if;
+select test_if(6)
+```
+##case
+>情况1：一般用于等值判断
+语法：
+CASE 变量|表达式|字段
+WHEN 要判断的值 THEN 返回的值1或语句1;
+WHEN 要判断的值 THEN 返回的值2或语句2;
+……
+ELSE 要返回的值n或语句n;
+END CASE
+
+>情况2：多重if语句，区间判断
+语法：
+CASE 变量|表达式|字段
+WHEN 要判断的条件1 THEN 返回的值1或语句1;
+WHEN 要判断的条件2 THEN 返回的值2或语句2;
+……
+ELSE 要返回的值n或语句n;
+END CASE
+
+>特点1：
+可以作为表达式，嵌套其他语句使用，放在begin end内外都可以
+可以作为单独语句使用，只能放在begin end中
+特点2：
+如果when的值满足，则执行then后面的语句，并结束case
+都不满足，则执行else中的值或语句
+特点3：
+else可以省略，若else省略，且所有when都不满足，则返回null
+
+```
+例2：
+
+/*输入年龄提示年龄阶段*/
+delimiter //
+create PROCEDURE test_case(in age int)
+BEGIN
+
+CASE
+WHEN age>60 AND age<=90 THEN select '老奶奶';
+WHEN age>30 AND age<=60 THEN select '大姐姐';
+WHEN age>18 AND age<=30 THEN select '小姐姐';
+WHEN age>12 AND age<=18 THEN select '女孩子';
+WHEN age>0 AND age<=12 THEN select '小女生';
+END CASE;
+END
+//
+
+call test_case(18)
+
+ ```
+#循环
+###while
+```
+  -- MySQL中的三中循环 while 、 loop 、repeat  求  1-n 的和
+
+
+   -- 第一种 while 循环 
+   -- 求 1-n 的和
+   /*  while循环语法：
+   while 条件 DO
+               循环体;
+   end while;
+   */
+    create procedure sum1(a int) 
+    begin
+        declare sum int default 0;  -- default 是指定该变量的默认值
+        declare i int default 1;
+    while i<=a DO -- 循环开始
+        set sum=sum+i;
+        set i=i+1;
+    end while; -- 循环结束
+    select sum;  -- 输出结果
+    end;
+    -- 执行存储过程
+    call sum1(100);
+    -- 删除存储过程
+    drop procedure if exists sum1；
+```
+###loop
+```
+-- 第二种 loop 循环
+  /*loop 循环语法：
+  loop_name:loop
+          if 条件 THEN -- 满足条件时离开循环
+               leave loop_name;  -- 和 break 差不多都是结束训话
+       end if；
+  end loop;
+  */
+create procedure sums(a int)
+begin
+        declare sum int default 0;
+        declare i int default 1;
+        loop_name:loop -- 循环开始
+            if i>a then 
+                leave loop_name;  -- 判断条件成立则结束循环  好比java中的 boeak
+            end if;
+            set sum=sum+i;
+            set i=i+1;
+        end loop;  -- 循环结束
+        select sum; -- 输出结果
+end;
+ -- 执行存储过程
+call sums(100);
+-- 删除存储过程
+drop procedure if exists  sums;
+```
+###repeat
+```
+-- 第三种 repeat 循环
+  /*repeat 循环语法
+  repeat
+      循环体
+  until 条件 end repeat;
+  */
+
+
+  -- 实例；
+  create procedure sum55(a int)
+  begin
+       declare sum int default 0;
+      declare i int default 1;
+       repeat -- 循环开始
+           set sum=sum+i;
+           set i=i+1;
+       until i>a end repeat; -- 循环结束
+       select sum; -- 输出结果
+  end;
+
+  -- 执行存储过程
+     call sum55(100);
+  -- 删除存储过程
+  drop procedure if exists sum55;
+```
+
+
+ 
+
+
+
 
 
 
