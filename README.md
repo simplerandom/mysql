@@ -442,7 +442,8 @@ DROP FUNCTION myf2;
  #调用函数
 SELECT myf2('kochhar')$
 ```
-##if函数
+
+## if函数
 >功能：实现分支流
 语法：
 if(表达式1,表达式2,表达式3)
@@ -468,7 +469,9 @@ END
 drop FUNCTION test_if;
 select test_if(6)
 ```
-##case
+
+# --------------------------流程----------------------------------
+## case
 >情况1：一般用于等值判断
 语法：
 CASE 变量|表达式|字段
@@ -517,8 +520,8 @@ END
 call test_case(18)
 
  ```
-#循环
-###while
+# 循环
+### while
 ```
   -- MySQL中的三中循环 while 、 loop 、repeat  求  1-n 的和
 
@@ -545,7 +548,7 @@ call test_case(18)
     -- 删除存储过程
     drop procedure if exists sum1；
 ```
-###loop
+### loop
 ```
 -- 第二种 loop 循环
   /*loop 循环语法：
@@ -573,7 +576,7 @@ call sums(100);
 -- 删除存储过程
 drop procedure if exists  sums;
 ```
-###repeat
+### repeat
 ```
 -- 第三种 repeat 循环
   /*repeat 循环语法
