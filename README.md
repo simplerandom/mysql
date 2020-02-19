@@ -340,8 +340,108 @@ savepoint a；
 语句二
 rollback to a；语句一还是持久化了
 ```
+# ---------------------------视图----------------------------------
+#创建
+```
+create view other as select a.name, a.age from user as a;
+```
+#删除
+```
+DROP  VIEW  IF  EXISTS  other
+```
+#查看
+```
+SHOW  CREATE  VIEW  other
+```
 
+# --------------------------过程----------------------------------
+#结束符
+```
+例1:mysql>select * from student;   #回车时就会执行这条语句
+例2:mysql>delimiter $
+mysql>select * from student;   #回车时不会执行
+->$    #在此回车才会执行上述语句
+mysql>delimiter ;#将命令结束符重新设定为(;)
+```
+#空参创建及调用,删除
+```
+create procedure testa()
+begin
+    select * from users;
+    select * from orders;
+end;
+--------------------
+call testa()
+--------------------
+drop procedure testa;
+show create procedure testa
+```
+#有参
+```
+create procedure 名称([IN|OUT|INOUT] 参数名 参数数据类型 )
+begin
+.........
+end
+------------------------------------------------------
+***out案例
+create procedure test5(in userId int,out username varchar(32))
+        begin
+            select name into username from users where id=userId;
+        end;
+***调用
+set @uname=' ';
+call test5(1,@uname);
+select @uname
+>
+ 概括：
+        1、传出参数：在调用存储过程中，可以改变其值，并可返回；
+        2、out是传出参数，不能用于传入参数值；
+        3、调用存储过程时，out参数也需要指定，但必须是变量，不能是常量；
+        4、如果既需要传入，同时又需要传出，则可以使用INOUT类型参数
+原文链接：https://blog.csdn.net/qq_33157666/article/details/87877246
 
+---------------------------------------------------
+*** inout案例
+create procedure test6(inout userId int,inout username varchar(32))
+begin
+    set userId=2;
+    set username='';
+    select id,name into userId,username from users where id=userId;
+end;
+***调用
+set @uname=' ';
+set @uid=0；
+call test6(@uid,@uname)
+select @uid,@uname
+>
+  概括：
+        1、可变变量INOUT:调用时可传入值，在调用过程中，可修改其值，同时也可返回值；
+        2、INOUT参数集合了IN和OUT类型的参数功能；
+        3、INOUT调用时传入的是变量，而不是常量；
+
+```
+
+# --------------------------函数----------------------------------
+ #有参有返回
+```
+ #案例1：根据员工名，返回它的工资
+
+CREATE FUNCTION myf2(empName VARCHAR(10)) RETURNS DOUBLE
+
+BEGIN
+
+DECLARE salary DOUBLE DEFAULT 0;#定义局部变量
+SELECT e.`salary` INTO salary #为局部变量赋值
+FROM employees e
+WHERE e.`last_name`=empName;
+RETURN salary;
+
+END $
+ #删除函数
+DROP FUNCTION myf2;
+ #调用函数
+SELECT myf2('kochhar')$
+```
 
 
 
