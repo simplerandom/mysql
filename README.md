@@ -1,4 +1,4 @@
-# ---------------------------------DDL----------------------------------
+# ---------------------------------DDL-----------------------------
 # *******************database定义*******************
 ### 创建数据库
 ```
@@ -157,7 +157,7 @@ alter table t modify column name int primary key ;
 列数据类型为数值型float int等
 且为一个key且唯一
 ```
-# ---------------------------------DQL----------------------------------
+# ---------------------------------DQL----------------------------
 ## 1.select用法
 ```
 select * from table;
@@ -275,48 +275,75 @@ select truncate(-1.56，1)
 
 
 ----------------------------------------------------------------数字函数
+```
+
+# -------------------------------变量----------------------------
+#变量
+##全局变量
+```
+show global variables
+show global variables like 'autocommit'
+select @@global.autocommit
+set @@global.autocommit=0
+```
+##会话变量
+```
+show session variables
+show session variables like 'autocommit'
+select @@session.autocommit
+set @@session.autocommit=0
+```
+##用户变量（作用范围会话）
+```
+set @name='li'
+select name into @name from t
+select @name查询 
+name的结果只能是一个
+```
+##局部变量（作用于begin end之间）
+```
+begin
+declare id int default 11；
+set id=12
+select id
+end
+```
+# -------------------------------事务-------------------------
+`show engines` ;default engine支持事务
+#特性
+一致性
+原子性
+隔离性
+持久性
+#开启事务
+`show variable 'autocommit'`
+   
+```
+ SET autocommit=0;单次有效，修改my.ini永久有效
+start transaction;
+语句一
+语句二
+commit
+or
+rollback
+***提交或回滚只能发生一次
+```
+###隔离级别（mysql默认Repeatable read）
+```
+Read uncommitted	√	√	√
+Read committed	×	√	√
+Repeatable read	×	×	√
+Serializable
+设置回滚点
+语句一
+savepoint a；
+语句二
+rollback to a；语句一还是持久化了
+```
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-```
-### 
-```
-```
-### 
-```
-```
-### 
-```
-```
-### 
-```
-```
-### 
-```
-```
-### 
-```
-```
-### 
-```
-```
-### 
-```
-```
 
 
 
